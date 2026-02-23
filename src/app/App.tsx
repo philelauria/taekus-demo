@@ -1,9 +1,10 @@
 import React from 'react'
 import { View, Text, StyleSheet, Pressable } from 'react-native'
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context'
-import { useTheme } from '~/shared/hooks.ts/useTheme'
+import { useTheme } from '~/shared/hooks/useTheme'
 import { ThemeMode } from '~/shared/theme'
 import { ThemeProvider } from './providers/ThemeProvider'
+import { Button } from '~/shared/components/Button'
 
 const styles = StyleSheet.create({
     container: {
@@ -72,34 +73,13 @@ const ThemeTestScreen: React.FC = () => {
                 }}
             >
                 {modes.map((mode) => (
-                    <Pressable
-                        key={mode}
-                        onPress={() => setThemeMode(mode)}
-                        style={{
-                            flex: 1,
-                            paddingVertical: theme.spacing.md,
-                            alignItems: 'center',
-                            backgroundColor:
-                                themeMode === mode
-                                    ? theme.colors.brand
-                                    : theme.colors.buttonSecondary,
-                            borderRadius: theme.borderRadius.md,
-                        }}
-                    >
-                        <Text
-                            style={[
-                                theme.typography.labelLarge,
-                                {
-                                    color:
-                                        themeMode === mode
-                                            ? theme.colors.buttonPrimaryText
-                                            : theme.colors.buttonSecondaryText,
-                                },
-                            ]}
-                        >
-                            {mode}
-                        </Text>
-                    </Pressable>
+                    <View key={mode} style={{ flex: 1 }}>
+                        <Button
+                            label={mode}
+                            variant={themeMode === mode ? 'primary' : 'secondary'}
+                            onPress={() => setThemeMode(mode)}
+                        />
+                    </View>
                 ))}
             </View>
         </SafeAreaView>
