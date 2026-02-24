@@ -9,6 +9,9 @@ import {
     MOCK_REWARDS,
 } from './mockData'
 
+const DEMO_EMAIL = 'demo@taekus.com'
+const DEMO_PASSWORD = 'demo'
+
 const delay = (ms?: number) =>
     new Promise((resolve) => setTimeout(resolve, ms ?? 300 + Math.random() * 500))
 
@@ -18,9 +21,18 @@ let cards = [...MOCK_CARDS]
 export const mockApi: ApiService = {
     login: async (req: LoginRequest): Promise<LoginResponse> => {
         await delay(600)
+
+        const email = req.email?.trim().toLowerCase()
+        const password = req.password?.trim()
+
         if (!req.email || !req.password) {
             throw { code: 'INVALID_CREDENTIALS', message: 'Email and password are required' }
         }
+
+        if (email !== DEMO_EMAIL || password !== DEMO_PASSWORD) {
+            throw { code: 'INVALID_CREDENTIALS', message: 'Invalid email or password' }
+        }
+
         return {
             accessToken: `fake-jwt-${Date.now()}`,
             refreshToken: `fake-refresh-${Date.now()}`,
