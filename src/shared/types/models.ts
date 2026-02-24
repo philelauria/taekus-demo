@@ -18,6 +18,14 @@ interface CardBase {
     expiryMonth: number
     expiryYear: number
     cvv?: string
+    colorScheme?: CardColorScheme
+}
+
+export type CardColorScheme = {
+    background: string
+    foreground: string
+    subtle: string
+    accent: string
 }
 
 interface CreditCard extends CardBase {

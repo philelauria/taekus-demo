@@ -43,7 +43,7 @@ export interface ThemeColors {
 }
 
 export const lightColors: ThemeColors = {
-    background: '#FFFFFF',
+    background: '#F8F5F0',
     backgroundSecondary: '#F5F5F7',
     backgroundTertiary: '#EBEBF0',
     surface: '#FFFFFF',

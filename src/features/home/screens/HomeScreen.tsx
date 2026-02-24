@@ -19,7 +19,7 @@ const formatCurrency = (n: number) => `$${n.toFixed(2).replace(/\B(?=(\d{3})+(?!
 export const HomeScreen: React.FC = () => {
     const { theme } = useTheme()
     const navigation = useNavigation<HomeNav>()
-    const { creditCard, debitCard, rewards, isLoading, isRefreshing, error, refresh } =
+    const { creditCards, debitCards, rewards, isLoading, isRefreshing, error, refresh } =
         useHomeData()
 
     const goToCardDetail = (card: Card) => {
@@ -61,18 +61,20 @@ export const HomeScreen: React.FC = () => {
                 </UICard>
             ) : (
                 <>
-                    {creditCard && (
+                    {creditCards.map((card) => (
                         <PaymentCardTile
-                            card={creditCard}
-                            onPress={() => goToCardDetail(creditCard)}
+                            key={card.id}
+                            card={card}
+                            onPress={() => goToCardDetail(card)}
                         />
-                    )}
-                    {debitCard && (
+                    ))}
+                    {debitCards.map((card) => (
                         <PaymentCardTile
-                            card={debitCard}
-                            onPress={() => goToCardDetail(debitCard)}
+                            key={card.id}
+                            card={card}
+                            onPress={() => goToCardDetail(card)}
                         />
-                    )}
+                    ))}
 
                     {rewards && (
                         <UICard variant="outlined">

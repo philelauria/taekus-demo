@@ -22,10 +22,10 @@ export const useHomeData = () => {
     const isRefreshing = (cardsFetching || rewardsFetching) && !isLoading
     const error = cardsError || rewardsError
 
-    const { creditCard, debitCard } = useMemo(() => {
-        const credit = cards?.find((c) => c.type === 'credit')
-        const debit = cards?.find((c) => c.type === 'debit')
-        return { creditCard: credit, debitCard: debit }
+    const { creditCards, debitCards } = useMemo(() => {
+        const credit = cards?.filter((c) => c.type === 'credit') ?? []
+        const debit = cards?.filter((c) => c.type === 'debit') ?? []
+        return { creditCards: credit, debitCards: debit }
     }, [cards])
 
     const refresh = useCallback(() => {
@@ -34,8 +34,8 @@ export const useHomeData = () => {
     }, [refetchCards, refetchRewards])
 
     return {
-        creditCard,
-        debitCard,
+        creditCards,
+        debitCards,
         rewards,
         isLoading,
         isRefreshing,

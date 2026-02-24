@@ -9,6 +9,7 @@ import { TransactionDetailScreen } from '~/features/transactions/screens/Transac
 import { ActivityScreen } from '~/features/transactions/screens/ActivityScreen'
 import { RewardsScreen } from '~/features/rewards/screens/RewardsScreen'
 import { SettingsScreen } from '~/features/settings/screens/SettingsScreen'
+import { Ionicons } from '@expo/vector-icons'
 
 const Tab = createBottomTabNavigator<MainTabParamList>()
 const HomeStack = createNativeStackNavigator<HomeStackParamList>()
@@ -38,7 +39,7 @@ export const BottomTabs: React.FC = () => {
 
     return (
         <Tab.Navigator
-            screenOptions={{
+            screenOptions={({ route }) => ({
                 headerShown: false,
                 tabBarActiveTintColor: theme.colors.brand,
                 tabBarInactiveTintColor: theme.colors.textTertiary,
@@ -46,7 +47,16 @@ export const BottomTabs: React.FC = () => {
                     backgroundColor: theme.colors.surface,
                     borderTopColor: theme.colors.borderLight,
                 },
-            }}
+                tabBarIcon: ({ color, size }) => {
+                    const icons: Record<string, keyof typeof Ionicons.glyphMap> = {
+                        TabHome: 'card-outline',
+                        Activity: 'list-outline',
+                        Rewards: 'star-outline',
+                        Settings: 'settings-outline',
+                    }
+                    return <Ionicons name={icons[route.name]} size={size} color={color} />
+                },
+            })}
         >
             <Tab.Screen
                 name="TabHome"

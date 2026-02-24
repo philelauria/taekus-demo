@@ -7,6 +7,33 @@ export const MOCK_USER: User = {
     lastName: 'Elauria',
 }
 
+const CARD_COLORS = {
+    black: {
+        background: '#1A1A2E',
+        foreground: '#FFFFFF',
+        subtle: 'rgba(255,255,255,0.7)',
+        accent: 'rgba(255,255,255,0.12)',
+    },
+    navy: {
+        background: '#0D2137',
+        foreground: '#FFFFFF',
+        subtle: 'rgba(255,255,255,0.7)',
+        accent: 'rgba(255,255,255,0.12)',
+    },
+    gold: {
+        background: '#8B6914',
+        foreground: '#FFFFFF',
+        subtle: 'rgba(255,255,255,0.75)',
+        accent: 'rgba(255,255,255,0.15)',
+    },
+    platinum: {
+        background: '#E8E8EF',
+        foreground: '#1A1A2E',
+        subtle: 'rgba(0,0,0,0.55)',
+        accent: 'rgba(0,0,0,0.08)',
+    },
+}
+
 export const MOCK_CARDS: Card[] = [
     {
         id: 'card-credit-001',
@@ -22,6 +49,23 @@ export const MOCK_CARDS: Card[] = [
         apr: 18.99,
         expiryMonth: 8,
         expiryYear: 2028,
+        colorScheme: CARD_COLORS.black,
+    },
+    {
+        id: 'card-credit-002',
+        type: 'credit',
+        name: 'Taekus Reserve',
+        lastFour: '9156',
+        status: 'active',
+        balance: 42318.67,
+        creditLimit: 150000,
+        availableCredit: 107681.33,
+        minimumPayment: 2539.12,
+        paymentDueDate: '2026-03-22',
+        apr: 16.49,
+        expiryMonth: 3,
+        expiryYear: 2029,
+        colorScheme: CARD_COLORS.navy,
     },
     {
         id: 'card-debit-001',
@@ -32,6 +76,7 @@ export const MOCK_CARDS: Card[] = [
         availableBalance: 284631.87,
         expiryMonth: 11,
         expiryYear: 2027,
+        colorScheme: CARD_COLORS.platinum,
     },
 ]
 

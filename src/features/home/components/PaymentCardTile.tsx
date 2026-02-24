@@ -23,11 +23,16 @@ export const PaymentCardTile: React.FC<Props> = ({ card, onPress }) => {
     const { theme } = useTheme()
 
     const isCredit = card.type === 'credit'
+    const colors = card.colorScheme ?? {
+        background: theme.colors.surface,
+        foreground: theme.colors.textPrimary,
+        subtle: theme.colors.textSecondary,
+        accent: 'rgba(0,0,0,0.05)',
+    }
 
-    const bg = isCredit ? theme.colors.brand : theme.colors.surfaceElevated
-    const fg = isCredit ? '#FFFFFF' : theme.colors.textPrimary
-    const fgSubtle = isCredit ? 'rgba(255,255,255,0.8)' : theme.colors.textSecondary
-    const shapeColor = isCredit ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.05)'
+    const bg = colors.background
+    const fg = colors.foreground
+    const fgSubtle = colors.subtle
 
     const primaryLine = isCredit
         ? `${formatCurrency(card.availableCredit)} available`
