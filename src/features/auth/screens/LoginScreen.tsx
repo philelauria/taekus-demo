@@ -1,5 +1,5 @@
 import React from 'react'
-import { View } from 'react-native'
+import { View, Image } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Text } from '~/shared/components/Text'
 import { useTheme } from '~/shared/hooks/useTheme'
@@ -17,7 +17,15 @@ export const LoginScreen: React.FC = () => {
                     padding: theme.spacing.lg,
                 }}
             >
-                <Text variant="displaySmall">Taekus</Text>
+                <Image
+                    source={require('../../../../assets/taekus-logo.png')}
+                    style={{
+                        width: 200,
+                        height: 60,
+                        tintColor: theme.colors.textPrimary,
+                    }}
+                    resizeMode="contain"
+                />
                 <Text
                     variant="bodyMedium"
                     color={theme.colors.textSecondary}

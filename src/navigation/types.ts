@@ -16,7 +16,7 @@ export type ActivityStackParamList = {
 }
 
 export type MainTabParamList = {
-    Home: undefined
+    TabHome: undefined
     Activity: undefined
     Rewards: undefined
     Settings: undefined
