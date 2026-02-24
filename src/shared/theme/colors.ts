@@ -123,7 +123,7 @@ export const darkColors: ThemeColors = {
     buttonSecondary: '#28283E',
     buttonSecondaryText: '#F0F0F5',
     buttonDisabled: '#1E1E30',
-    buttonDisabledText: '#6B6B80',
+    buttonDisabledText: '#8888A0',
 
     cardBackground: '#1E1E30',
     cardText: '#F0F0F5',
