@@ -77,3 +77,10 @@ export const apiSlice = createApi({
         }),
     }),
 })
+
+export const {
+    useGetCardsQuery,
+    useGetTransactionsQuery,
+    useToggleCardFreezeMutation,
+    useGetRewardsQuery,
+} = apiSlice

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
@@ -10,7 +10,7 @@ import { Text } from '~/shared/components/Text'
 import { Card as UICard } from '~/shared/components/Card'
 import { useTheme } from '~/shared/hooks/useTheme'
 import { PaymentCardTile } from '~/features/home/components/PaymentCardTile'
-import { useHomeScreenLogic } from '~/features/home/hooks/useHomeScreenLogic'
+import { useHomeData } from '~/features/home/hooks/useHomeData'
 
 type HomeNav = NativeStackNavigationProp<HomeStackParamList, 'HomeScreen'>
 
@@ -19,13 +19,8 @@ const formatCurrency = (n: number) => `$${n.toFixed(2).replace(/\B(?=(\d{3})+(?!
 export const HomeScreen: React.FC = () => {
     const { theme } = useTheme()
     const navigation = useNavigation<HomeNav>()
-    const { cards, rewards, isLoading, isRefreshing, error, refresh } = useHomeScreenLogic()
-
-    const { creditCard, debitCard } = useMemo(() => {
-        const credit = cards.find((c) => c.type === 'credit')
-        const debit = cards.find((c) => c.type === 'debit')
-        return { creditCard: credit, debitCard: debit }
-    }, [cards])
+    const { creditCard, debitCard, rewards, isLoading, isRefreshing, error, refresh } =
+        useHomeData()
 
     const goToCardDetail = (card: Card) => {
         navigation.navigate('CardDetail', { card })
@@ -55,13 +50,13 @@ export const HomeScreen: React.FC = () => {
                 </View>
             ) : error ? (
                 <UICard variant="outlined">
-                    <Text variant="titleMedium">Couldn’t load data</Text>
+                    <Text variant="titleMedium">Couldn't load data</Text>
                     <Text
                         variant="bodyMedium"
                         color={theme.colors.textSecondary}
                         style={{ marginTop: theme.spacing.sm }}
                     >
-                        {error}
+                        Something went wrong
                     </Text>
                 </UICard>
             ) : (
