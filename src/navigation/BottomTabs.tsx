@@ -16,20 +16,54 @@ const HomeStack = createNativeStackNavigator<HomeStackParamList>()
 const ActivityStack = createNativeStackNavigator<ActivityStackParamList>()
 
 const HomeStackNavigator: React.FC = () => {
+    const { theme } = useTheme()
+
     return (
-        <HomeStack.Navigator screenOptions={{ headerShown: false }}>
+        <HomeStack.Navigator
+            screenOptions={{
+                headerShown: false,
+                headerStyle: { backgroundColor: theme.colors.background },
+                headerTintColor: theme.colors.brand,
+                headerTitleStyle: { color: theme.colors.textPrimary },
+            }}
+        >
             <HomeStack.Screen name="HomeScreen" component={HomeScreen} />
-            <HomeStack.Screen name="CardDetail" component={CardDetailScreen} />
-            <HomeStack.Screen name="TransactionDetail" component={TransactionDetailScreen} />
+            <HomeStack.Screen
+                name="CardDetail"
+                component={CardDetailScreen}
+                options={{ headerShown: true, headerTitle: 'Card Detail', headerBackTitle: 'Home' }}
+            />
+            <HomeStack.Screen
+                name="TransactionDetail"
+                component={TransactionDetailScreen}
+                options={{ headerShown: true, headerTitle: 'Transaction', headerBackTitle: 'Back' }}
+            />
         </HomeStack.Navigator>
     )
 }
 
 const ActivityStackNavigator: React.FC = () => {
+    const { theme } = useTheme()
+
     return (
-        <ActivityStack.Navigator screenOptions={{ headerShown: false }}>
+        <ActivityStack.Navigator
+            screenOptions={{
+                headerShown: false,
+                headerStyle: { backgroundColor: theme.colors.background },
+                headerTintColor: theme.colors.brand,
+                headerTitleStyle: { color: theme.colors.textPrimary },
+            }}
+        >
             <ActivityStack.Screen name="ActivityScreen" component={ActivityScreen} />
-            <ActivityStack.Screen name="TransactionDetail" component={TransactionDetailScreen} />
+            <ActivityStack.Screen
+                name="TransactionDetail"
+                component={TransactionDetailScreen}
+                options={{
+                    headerShown: true,
+                    headerTitle: 'Transaction',
+                    headerBackTitle: 'Activity',
+                }}
+            />
         </ActivityStack.Navigator>
     )
 }
