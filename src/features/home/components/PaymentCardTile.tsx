@@ -23,6 +23,8 @@ export const PaymentCardTile: React.FC<Props> = ({ card, onPress }) => {
     const { theme } = useTheme()
 
     const isCredit = card.type === 'credit'
+    const isFrozen = card.status === 'frozen'
+
     const colors = card.colorScheme ?? {
         background: theme.colors.surface,
         foreground: theme.colors.textPrimary,
@@ -40,11 +42,7 @@ export const PaymentCardTile: React.FC<Props> = ({ card, onPress }) => {
 
     const secondaryLine = isCredit
         ? `Limit ${formatCurrency(card.creditLimit)}`
-        : `Status ${card.status === 'frozen' ? 'Frozen' : 'Active'}`
-
-    const frozenBannerHeight = card.status === 'frozen' ? 36 : 0
-    const bottomRowHeight = 58
-    const bottomInset = theme.spacing.lg + frozenBannerHeight
+        : `Status ${isFrozen ? 'Frozen' : 'Active'}`
 
     return (
         <Card
@@ -58,15 +56,14 @@ export const PaymentCardTile: React.FC<Props> = ({ card, onPress }) => {
             <View
                 style={{
                     width: '100%',
-                    aspectRatio: 1.586,
-                    minHeight: 200,
+                    height: 200,
                     borderRadius: theme.borderRadius.lg,
                     backgroundColor: bg,
                     padding: theme.spacing.lg,
-                    paddingBottom: theme.spacing.lg + bottomRowHeight + frozenBannerHeight,
                     overflow: 'hidden',
                     borderWidth: isCredit ? 0 : 1,
                     borderColor: theme.colors.borderLight,
+                    justifyContent: 'space-between',
                 }}
             >
                 {/* Top row */}
@@ -89,27 +86,13 @@ export const PaymentCardTile: React.FC<Props> = ({ card, onPress }) => {
                             {card.name}
                         </Text>
                     </View>
-
                     <Text variant="labelLarge" color={fg}>
                         {isCredit ? 'VISA' : 'MC'}
                     </Text>
                 </View>
 
-                {/* Chip */}
-                <View
-                    style={{
-                        width: 44,
-                        height: 34,
-                        borderRadius: 8,
-                        borderWidth: 1,
-                        borderColor: isCredit ? 'rgba(255,255,255,0.35)' : theme.colors.border,
-                        backgroundColor: isCredit ? 'rgba(255,255,255,0.12)' : theme.colors.surface,
-                        marginTop: theme.spacing.md,
-                    }}
-                />
-
-                {/* Middle */}
-                <View style={{ marginTop: theme.spacing.md }}>
+                {/* Middle — balance */}
+                <View>
                     <Text variant="titleMedium" color={fg}>
                         {primaryLine}
                     </Text>
@@ -122,64 +105,56 @@ export const PaymentCardTile: React.FC<Props> = ({ card, onPress }) => {
                     </Text>
                 </View>
 
-                {/* Bottom row (absolute) */}
+                {/* Bottom — card number + expiry */}
                 <View
                     style={{
-                        position: 'absolute',
-                        left: theme.spacing.lg,
-                        right: theme.spacing.lg,
-                        bottom: bottomInset,
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'flex-end',
                     }}
                 >
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            alignItems: 'flex-end',
-                        }}
-                    >
-                        <View>
-                            <Text variant="bodySmall" color={fgSubtle}>
-                                CARD NUMBER
-                            </Text>
-                            <Text
-                                variant="titleMedium"
-                                color={fg}
-                                style={{ marginTop: theme.spacing.xs }}
-                            >
-                                •••• {card.lastFour}
-                            </Text>
-                        </View>
-
-                        <View style={{ alignItems: 'flex-end' }}>
-                            <Text variant="bodySmall" color={fgSubtle}>
-                                EXP
-                            </Text>
-                            <Text
-                                variant="titleMedium"
-                                color={fg}
-                                style={{ marginTop: theme.spacing.xs }}
-                            >
-                                {formatExpiry(card.expiryMonth, card.expiryYear)}
-                            </Text>
-                        </View>
+                    <View>
+                        <Text variant="bodySmall" color={fgSubtle}>
+                            CARD NUMBER
+                        </Text>
+                        <Text
+                            variant="titleMedium"
+                            color={fg}
+                            style={{ marginTop: theme.spacing.xs }}
+                        >
+                            •••• {card.lastFour}
+                        </Text>
+                    </View>
+                    <View style={{ alignItems: 'flex-end' }}>
+                        <Text variant="bodySmall" color={fgSubtle}>
+                            EXP
+                        </Text>
+                        <Text
+                            variant="titleMedium"
+                            color={fg}
+                            style={{ marginTop: theme.spacing.xs }}
+                        >
+                            {formatExpiry(card.expiryMonth, card.expiryYear)}
+                        </Text>
                     </View>
                 </View>
 
-                {/* Frozen banner */}
-                {card.status === 'frozen' && (
+                {/* Frozen overlay */}
+                {isFrozen && (
                     <View
                         style={{
                             position: 'absolute',
+                            top: 0,
                             left: 0,
                             right: 0,
                             bottom: 0,
-                            height: frozenBannerHeight,
+                            backgroundColor: 'rgba(0,0,0,0.5)',
+                            borderRadius: theme.borderRadius.lg,
                             justifyContent: 'center',
-                            backgroundColor: isCredit ? 'rgba(0,0,0,0.35)' : 'rgba(0,0,0,0.10)',
+                            alignItems: 'center',
                         }}
                     >
-                        <Text variant="labelLarge" color={fg} align="center">
+                        <Text variant="displaySmall" color="#FFFFFF">
                             FROZEN
                         </Text>
                     </View>

@@ -48,7 +48,7 @@ export const mockApi: ApiService = {
 
     getCards: async (): Promise<ApiResponse<Card[]>> => {
         await delay()
-        return { data: cards }
+        return { data: cards.map((c) => ({ ...c })) }
     },
 
     getTransactions: async (
@@ -94,8 +94,9 @@ export const mockApi: ApiService = {
         }
         const current = cards[index]
         const newStatus = current.status === 'active' ? 'frozen' : 'active'
-        cards[index] = { ...current, status: newStatus } as Card
-        return { data: cards[index] }
+        const updated = { ...current, status: newStatus } as Card
+        cards = cards.map((c) => (c.id === cardId ? updated : c))
+        return { data: { ...updated } }
     },
 
     getRewards: async (): Promise<ApiResponse<RewardsBalance>> => {

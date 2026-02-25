@@ -65,7 +65,7 @@ export const MOCK_CARDS: Card[] = [
         apr: 16.49,
         expiryMonth: 3,
         expiryYear: 2029,
-        colorScheme: CARD_COLORS.navy,
+        colorScheme: CARD_COLORS.gold,
     },
     {
         id: 'card-debit-001',

@@ -18,7 +18,7 @@ export const useHomeData = () => {
         refetch: refetchRewards,
     } = useGetRewardsQuery()
 
-    const isLoading = cardsLoading || rewardsLoading
+    const isLoading = (cardsLoading || rewardsLoading) && !cards
     const isRefreshing = (cardsFetching || rewardsFetching) && !isLoading
     const error = cardsError || rewardsError
 

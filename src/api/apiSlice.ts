@@ -48,6 +48,7 @@ export const apiSlice = createApi({
                 }
             },
             onQueryStarted: async (cardId, { dispatch, queryFulfilled }) => {
+                // optimistic updates
                 const patchResult = dispatch(
                     apiSlice.util.updateQueryData('getCards', undefined, (draft) => {
                         const card = draft.find((c) => c.id === cardId)
@@ -59,6 +60,7 @@ export const apiSlice = createApi({
                 try {
                     await queryFulfilled
                 } catch {
+                    // undo UI updates on fail
                     patchResult.undo()
                 }
             },
