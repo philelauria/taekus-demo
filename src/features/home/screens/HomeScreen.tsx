@@ -34,7 +34,7 @@ export const HomeScreen: React.FC = () => {
             contentStyle={{ gap: theme.spacing.lg }}
         >
             <View>
-                <Text variant="displaySmall">Home</Text>
+                <Text variant="displaySmall">Accounts</Text>
                 <Text
                     variant="bodyMedium"
                     color={theme.colors.textSecondary}
