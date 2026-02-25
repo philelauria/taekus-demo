@@ -30,7 +30,10 @@ export const mockApi: ApiService = {
         }
 
         if (email !== DEMO_EMAIL || password !== DEMO_PASSWORD) {
-            throw { code: 'INVALID_CREDENTIALS', message: 'Invalid email or password' }
+            throw {
+                code: 'INVALID_CREDENTIALS',
+                message: `Invalid email or password\nEmail: ${DEMO_EMAIL}\nPassword: ${DEMO_PASSWORD}`,
+            }
         }
 
         return {

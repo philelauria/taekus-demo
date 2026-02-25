@@ -2,14 +2,14 @@ import React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
-
+import Animated, { FadeInDown, Easing } from 'react-native-reanimated'
 import type { Card } from '~/shared/types'
 import type { HomeStackParamList } from '~/navigation/types'
 import { ScreenWrapper } from '~/shared/components/ScreenWrapper'
 import { Text } from '~/shared/components/Text'
 import { Card as UICard } from '~/shared/components/Card'
 import { useTheme } from '~/shared/hooks/useTheme'
-import { PaymentCardTile } from '~/features/home/components/PaymentCardTile'
+import { PaymentCardTile } from '~/shared/components/PaymentCardTile'
 import { useHomeData } from '~/features/home/hooks/useHomeData'
 
 type HomeNav = NativeStackNavigationProp<HomeStackParamList, 'HomeScreen'>
@@ -61,19 +61,33 @@ export const HomeScreen: React.FC = () => {
                 </UICard>
             ) : (
                 <>
-                    {creditCards.map((card) => (
-                        <PaymentCardTile
+                    {creditCards.map((card, index) => (
+                        <Animated.View
                             key={card.id}
-                            card={card}
-                            onPress={() => goToCardDetail(card)}
-                        />
+                            entering={FadeInDown.delay(index * 100)
+                                .duration(400)
+                                .easing(Easing.out(Easing.ease))}
+                        >
+                            <PaymentCardTile
+                                key={card.id}
+                                card={card}
+                                onPress={() => goToCardDetail(card)}
+                            />
+                        </Animated.View>
                     ))}
-                    {debitCards.map((card) => (
-                        <PaymentCardTile
+                    {debitCards.map((card, index) => (
+                        <Animated.View
                             key={card.id}
-                            card={card}
-                            onPress={() => goToCardDetail(card)}
-                        />
+                            entering={FadeInDown.delay(index * 100)
+                                .duration(400)
+                                .easing(Easing.out(Easing.ease))}
+                        >
+                            <PaymentCardTile
+                                key={card.id}
+                                card={card}
+                                onPress={() => goToCardDetail(card)}
+                            />
+                        </Animated.View>
                     ))}
 
                     {rewards && (

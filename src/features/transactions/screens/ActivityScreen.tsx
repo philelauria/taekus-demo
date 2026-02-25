@@ -112,7 +112,6 @@ export const ActivityScreen: React.FC = () => {
                     data={transactions}
                     renderItem={renderItem}
                     keyExtractor={keyExtractor}
-                    estimatedItemSize={72}
                     ListHeaderComponent={listHeader}
                     ListEmptyComponent={emptyComponent}
                     refreshing={isRefreshing}

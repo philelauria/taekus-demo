@@ -64,7 +64,7 @@ export const apiSlice = createApi({
                     patchResult.undo()
                 }
             },
-            invalidatesTags: ['Cards'],
+            // invalidatesTags: ['Cards'], Note: not needed and including this causes jank in animation transitions
         }),
         getRewards: builder.query<RewardsBalance, void>({
             queryFn: async () => {

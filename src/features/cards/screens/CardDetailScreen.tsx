@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useMemo } from 'react'
 import { View, FlatList } from 'react-native'
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
@@ -12,7 +12,7 @@ import { Text } from '~/shared/components/Text'
 import { Button } from '~/shared/components/Button'
 import { Card as UICard } from '~/shared/components/Card'
 import { TransactionRow } from '~/features/transactions/components/TransactionRow'
-import { PaymentCardTile } from '~/features/home/components/PaymentCardTile'
+import { PaymentCardTile } from '~/shared/components/PaymentCardTile'
 import { useTheme } from '~/shared/hooks/useTheme'
 import { useCardDetailData } from '~/features/cards/hooks/useCardDetailData'
 import { formatCurrency, formatCardExpiry } from '~/shared/services/format'
@@ -50,83 +50,89 @@ export const CardDetailScreen: React.FC = () => {
 
     const handleFreeze = useCallback(async () => {
         await handleToggleFreeze()
-        await Haptics.impactAsync(Haptics.ImpactFeedbackType.Medium)
+        await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
     }, [handleToggleFreeze])
 
     const goToTransaction = (transaction: Transaction) => {
         navigation.navigate('TransactionDetail', { transaction })
     }
 
-    const renderHeader = () => (
-        <View style={{ gap: theme.spacing.lg, paddingBottom: theme.spacing.md }}>
-            <PaymentCardTile card={displayCard} onPress={() => {}} />
+    const renderHeader = useMemo(
+        () => (
+            <View style={{ gap: theme.spacing.lg, paddingBottom: theme.spacing.md }}>
+                <PaymentCardTile card={displayCard} onPress={() => {}} />
 
-            <View style={{ flexDirection: 'row', gap: theme.spacing.md }}>
-                <View style={{ flex: 1 }}>
-                    <Button
-                        label={isFrozen ? 'Unfreeze Card' : 'Freeze Card'}
-                        variant={isFrozen ? 'primary' : 'danger'}
-                        onPress={handleFreeze}
-                        loading={isToggling}
-                        fullWidth
-                    />
-                </View>
-                <View style={{ flex: 1 }}>
-                    <Button
-                        label={revealedNumber ? 'Hide Number' : 'Show Number'}
-                        variant="secondary"
-                        onPress={
-                            revealedNumber
-                                ? () => {
-                                      setRevealedNumber(null)
-                                      setRevealedCvv(null)
-                                  }
-                                : handleRevealCard
-                        }
-                        fullWidth
-                    />
-                </View>
-            </View>
-
-            {revealedNumber && (
-                <UICard variant="outlined">
-                    <Text variant="bodySmall" color={theme.colors.textSecondary}>
-                        Card Number
-                    </Text>
-                    <Text variant="titleMedium" style={{ marginTop: theme.spacing.xs }}>
-                        {revealedNumber}
-                    </Text>
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            marginTop: theme.spacing.md,
-                            gap: theme.spacing['2xl'],
-                        }}
-                    >
-                        <View>
-                            <Text variant="bodySmall" color={theme.colors.textSecondary}>
-                                Expiry
-                            </Text>
-                            <Text variant="titleMedium" style={{ marginTop: theme.spacing.xs }}>
-                                {formatCardExpiry(displayCard.expiryMonth, displayCard.expiryYear)}
-                            </Text>
-                        </View>
-                        <View>
-                            <Text variant="bodySmall" color={theme.colors.textSecondary}>
-                                CVV
-                            </Text>
-                            <Text variant="titleMedium" style={{ marginTop: theme.spacing.xs }}>
-                                {revealedCvv}
-                            </Text>
-                        </View>
+                <View style={{ flexDirection: 'row', gap: theme.spacing.md }}>
+                    <View style={{ flex: 1 }}>
+                        <Button
+                            label={isFrozen ? 'Unfreeze Card' : 'Freeze Card'}
+                            variant={isFrozen ? 'primary' : 'danger'}
+                            onPress={handleFreeze}
+                            loading={isToggling}
+                            fullWidth
+                        />
                     </View>
-                </UICard>
-            )}
+                    <View style={{ flex: 1 }}>
+                        <Button
+                            label={revealedNumber ? 'Hide Number' : 'Reveal'}
+                            variant="secondary"
+                            onPress={
+                                revealedNumber
+                                    ? () => {
+                                          setRevealedNumber(null)
+                                          setRevealedCvv(null)
+                                      }
+                                    : handleRevealCard
+                            }
+                            fullWidth
+                        />
+                    </View>
+                </View>
 
-            <Text variant="titleMedium" style={{ marginTop: theme.spacing.sm }}>
-                Recent Transactions
-            </Text>
-        </View>
+                {revealedNumber && (
+                    <UICard variant="outlined">
+                        <Text variant="bodySmall" color={theme.colors.textSecondary}>
+                            Card Number
+                        </Text>
+                        <Text variant="titleMedium" style={{ marginTop: theme.spacing.xs }}>
+                            {revealedNumber}
+                        </Text>
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                marginTop: theme.spacing.md,
+                                gap: theme.spacing['2xl'],
+                            }}
+                        >
+                            <View>
+                                <Text variant="bodySmall" color={theme.colors.textSecondary}>
+                                    Expiry
+                                </Text>
+                                <Text variant="titleMedium" style={{ marginTop: theme.spacing.xs }}>
+                                    {formatCardExpiry(
+                                        displayCard.expiryMonth,
+                                        displayCard.expiryYear,
+                                    )}
+                                </Text>
+                            </View>
+                            <View>
+                                <Text variant="bodySmall" color={theme.colors.textSecondary}>
+                                    CVV
+                                </Text>
+                                <Text variant="titleMedium" style={{ marginTop: theme.spacing.xs }}>
+                                    {revealedCvv}
+                                </Text>
+                            </View>
+                        </View>
+                    </UICard>
+                )}
+
+                <Text variant="titleMedium" style={{ marginTop: theme.spacing.sm }}>
+                    Recent Transactions
+                </Text>
+            </View>
+        ),
+        [displayCard, isFrozen, isToggling, revealedNumber, revealedCvv],
     )
 
     return (

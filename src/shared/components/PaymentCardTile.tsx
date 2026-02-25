@@ -1,10 +1,16 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { View } from 'react-native'
-
 import type { Card as CardModel } from '~/shared/types'
 import { Card } from '~/shared/components/Card'
 import { Text } from '~/shared/components/Text'
 import { useTheme } from '~/shared/hooks/useTheme'
+import Animated, {
+    FadeIn,
+    FadeOut,
+    useSharedValue,
+    useAnimatedStyle,
+    withTiming,
+} from 'react-native-reanimated'
 
 const formatCurrency = (n: number) => `$${n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
 
@@ -21,9 +27,19 @@ type Props = {
 
 export const PaymentCardTile: React.FC<Props> = ({ card, onPress }) => {
     const { theme } = useTheme()
-
     const isCredit = card.type === 'credit'
     const isFrozen = card.status === 'frozen'
+
+    const frozenOpacity = useSharedValue(isFrozen ? 1 : 0)
+
+    useEffect(() => {
+        console.log('Freeze changed:', isFrozen)
+        frozenOpacity.value = withTiming(isFrozen ? 1 : 0, { duration: 3000 })
+    }, [isFrozen])
+
+    const frozenStyle = useAnimatedStyle(() => ({
+        opacity: frozenOpacity.value,
+    }))
 
     const colors = card.colorScheme ?? {
         background: theme.colors.surface,
@@ -140,9 +156,11 @@ export const PaymentCardTile: React.FC<Props> = ({ card, onPress }) => {
                 </View>
 
                 {/* Frozen overlay */}
-                {isFrozen && (
-                    <View
-                        style={{
+                {/* {isFrozen && ( */}
+                <Animated.View
+                    pointerEvents={isFrozen ? 'auto' : 'none'}
+                    style={[
+                        {
                             position: 'absolute',
                             top: 0,
                             left: 0,
@@ -152,13 +170,15 @@ export const PaymentCardTile: React.FC<Props> = ({ card, onPress }) => {
                             borderRadius: theme.borderRadius.lg,
                             justifyContent: 'center',
                             alignItems: 'center',
-                        }}
-                    >
-                        <Text variant="displaySmall" color="#FFFFFF">
-                            FROZEN
-                        </Text>
-                    </View>
-                )}
+                        },
+                        frozenStyle,
+                    ]}
+                >
+                    <Text variant="displaySmall" color="#FFFFFF">
+                        FROZEN
+                    </Text>
+                </Animated.View>
+                {/* )} */}
             </View>
         </Card>
     )
