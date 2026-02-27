@@ -24,7 +24,7 @@ export const SettingsScreen: React.FC = () => {
     }
 
     return (
-        <ScreenWrapper scroll contentStyle={{ gap: theme.spacing.lg }}>
+        <ScreenWrapper contentStyle={{ gap: theme.spacing.lg }}>
             <View>
                 <Text variant="displaySmall">Settings</Text>
                 <Text
