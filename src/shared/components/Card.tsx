@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { View, Pressable, ViewStyle, StyleSheet } from 'react-native'
 import { useTheme } from '~/shared/hooks/useTheme'
 
@@ -11,6 +11,7 @@ export interface CardProps {
 
 export const Card: React.FC<CardProps> = ({ children, onPress, variant = 'default', style }) => {
     const { theme } = useTheme()
+    const [pressed, setPressed] = useState(false)
 
     const variantStyles: ViewStyle = {
         default: {
@@ -42,8 +43,10 @@ export const Card: React.FC<CardProps> = ({ children, onPress, variant = 'defaul
         return (
             <Pressable
                 onPress={onPress}
+                onPressIn={() => setPressed(true)}
+                onPressOut={() => setPressed(false)}
                 accessibilityRole="button"
-                style={({ pressed }) => [...cardStyle, { opacity: pressed ? 0.9 : 1 }]}
+                style={StyleSheet.flatten([...cardStyle, { opacity: pressed ? 0.9 : 1 }])}
             >
                 {children}
             </Pressable>
