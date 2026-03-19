@@ -1,35 +1,29 @@
 import React, { useEffect } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import * as SplashScreen from 'expo-splash-screen'
-import {
-    restoreSession,
-    selectIsAuthenticated,
-    selectIsRestoringSession,
-} from '~/features/auth/slice'
-import { useAppDispatch, useAppSelector } from '~/store/hooks'
+import { observer } from 'mobx-react-lite'
 import { useTheme } from '~/shared/hooks/useTheme'
 import { AuthStack } from './AuthStack'
 import { BottomTabs } from './BottomTabs'
+import { useStores } from '~/mobxStores/StoreProvider'
 
 SplashScreen.preventAutoHideAsync()
 
-export const RootNavigator: React.FC = () => {
-    const dispatch = useAppDispatch()
-    const isAuthenticated = useAppSelector(selectIsAuthenticated)
-    const isRestoringSession = useAppSelector(selectIsRestoringSession)
+export const RootNavigator: React.FC = observer(() => {
+    const { authStore } = useStores()
     const { theme } = useTheme()
 
     useEffect(() => {
-        dispatch(restoreSession())
-    }, [dispatch])
+        authStore.restoreSession()
+    }, [authStore])
 
     useEffect(() => {
-        if (!isRestoringSession) {
+        if (!authStore.isRestoringSession) {
             SplashScreen.hideAsync()
         }
-    }, [isRestoringSession])
+    }, [authStore.isRestoringSession])
 
-    if (isRestoringSession) {
+    if (authStore.isRestoringSession) {
         return null
     }
 
@@ -53,7 +47,7 @@ export const RootNavigator: React.FC = () => {
                 },
             }}
         >
-            {isAuthenticated ? <BottomTabs /> : <AuthStack />}
+            {authStore.isAuthenticated ? <BottomTabs /> : <AuthStack />}
         </NavigationContainer>
     )
-}
+})
