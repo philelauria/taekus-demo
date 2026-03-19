@@ -1,4 +1,5 @@
 import React from 'react'
+import '../../global.css'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { ThemeProvider } from './providers/ThemeProvider'
 import { Provider } from 'react-redux'
