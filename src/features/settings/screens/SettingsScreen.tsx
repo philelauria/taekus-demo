@@ -1,25 +1,24 @@
 import React from 'react'
 import { Alert, View } from 'react-native'
+import { observer } from 'mobx-react-lite'
 import { ScreenWrapper } from '~/shared/components/ScreenWrapper'
 import { Text } from '~/shared/components/Text'
 import { Button } from '~/shared/components/Button'
 import { Card as UICard } from '~/shared/components/Card'
 import { useTheme } from '~/shared/hooks/useTheme'
-import { useAppDispatch, useAppSelector } from '~/store/hooks'
-import { logout, selectUser } from '~/features/auth/slice'
+import { useStores } from '~/mobxStores/StoreProvider'
 import { ThemeMode } from '~/shared/theme'
 
-export const SettingsScreen: React.FC = () => {
+export const SettingsScreen: React.FC = observer(() => {
     const { theme, themeMode, setThemeMode } = useTheme()
-    const dispatch = useAppDispatch()
-    const user = useAppSelector(selectUser)
+    const { authStore } = useStores()
 
     const themeModes: ThemeMode[] = ['system', 'light', 'dark']
 
     const handleLogout = () => {
         Alert.alert('Log out?', "You'll return to the login screen.", [
             { text: 'Cancel', style: 'cancel' },
-            { text: 'Log out', style: 'destructive', onPress: () => dispatch(logout()) },
+            { text: 'Log out', style: 'destructive', onPress: () => authStore.logout() },
         ])
     }
 
@@ -38,9 +37,9 @@ export const SettingsScreen: React.FC = () => {
 
             <UICard variant="outlined">
                 <View style={{ gap: theme.spacing.xs }}>
-                    <Text variant="titleMedium">{user?.firstName ?? 'Demo User'}</Text>
+                    <Text variant="titleMedium">{authStore.user?.firstName ?? 'Demo User'}</Text>
                     <Text variant="bodyMedium" color={theme.colors.textSecondary}>
-                        {user?.email ?? 'demo@taekus.com'}
+                        {authStore.user?.email ?? 'demo@taekus.com'}
                     </Text>
                 </View>
             </UICard>
@@ -70,4 +69,4 @@ export const SettingsScreen: React.FC = () => {
             <Button label="Log out" variant="danger" fullWidth onPress={handleLogout} />
         </ScreenWrapper>
     )
-}
+})
