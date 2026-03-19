@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Pressable, StyleSheet, ActivityIndicator, PressableProps, ViewStyle } from 'react-native'
 import { useTheme } from '../hooks/useTheme'
 import { Text } from '~/shared/components/Text'
@@ -37,6 +37,7 @@ export const Button: React.FC<ButtonProps> = ({
     ...props
 }) => {
     const { theme } = useTheme()
+    const [pressed, setPressed] = useState(false)
     const isDisabled = disabled || loading
 
     const sizeStyles = {
@@ -73,7 +74,9 @@ export const Button: React.FC<ButtonProps> = ({
     return (
         <Pressable
             disabled={isDisabled}
-            style={({ pressed }) => [
+            onPressIn={() => setPressed(true)}
+            onPressOut={() => setPressed(false)}
+            style={StyleSheet.flatten([
                 styles.base,
                 sizeStyles[size],
                 fullWidth && styles.fullWidth,
@@ -84,7 +87,7 @@ export const Button: React.FC<ButtonProps> = ({
                     opacity: pressed ? 0.7 : 1,
                 },
                 style as ViewStyle,
-            ]}
+            ])}
             {...props}
         >
             {loading ? (

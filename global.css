@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --color-background: 248 245 240;
+    --color-background-secondary: 245 245 247;
+    --color-background-tertiary: 235 235 240;
+    --color-surface: 255 255 255;
+    --color-surface-elevated: 255 255 255;
+
+    --color-text-primary: 26 26 46;
+    --color-text-secondary: 107 107 128;
+    --color-text-tertiary: 153 153 173;
+    --color-text-inverse: 255 255 255;
+
+    --color-brand: 27 43 75;
+    --color-brand-light: 45 74 122;
+    --color-brand-dark: 15 27 51;
+
+    --color-success: 0 135 90;
+    --color-success-light: 227 252 239;
+    --color-warning: 255 139 0;
+    --color-warning-light: 255 247 230;
+    --color-error: 222 53 11;
+    --color-error-light: 255 235 230;
+    --color-info: 0 101 255;
+    --color-info-light: 230 240 255;
+
+    --color-border: 209 209 219;
+    --color-border-light: 232 232 239;
+    --color-divider: 240 240 245;
+    --color-disabled: 199 199 209;
+    --color-placeholder: 173 173 189;
+
+    --color-btn-primary: 27 43 75;
+    --color-btn-primary-text: 255 255 255;
+    --color-btn-secondary: 240 240 245;
+    --color-btn-secondary-text: 26 26 46;
+    --color-btn-disabled: 232 232 239;
+    --color-btn-disabled-text: 173 173 189;
+
+    --color-card: 27 43 75;
+    --color-card-text: 255 255 255;
+    --color-card-accent: 201 168 76;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-background: 13 13 20;
+        --color-background-secondary: 26 26 40;
+        --color-background-tertiary: 37 37 58;
+        --color-surface: 30 30 48;
+        --color-surface-elevated: 40 40 62;
+
+        --color-text-primary: 240 240 245;
+        --color-text-secondary: 153 153 173;
+        --color-text-tertiary: 107 107 128;
+        --color-text-inverse: 26 26 46;
+
+        --color-brand: 74 122 201;
+        --color-brand-light: 107 155 224;
+        --color-brand-dark: 45 90 158;
+
+        --color-success: 54 179 126;
+        --color-success-light: 26 46 37;
+        --color-warning: 255 171 0;
+        --color-warning-light: 46 42 26;
+        --color-error: 255 86 48;
+        --color-error-light: 46 26 26;
+        --color-info: 76 154 255;
+        --color-info-light: 26 36 64;
+
+        --color-border: 53 53 77;
+        --color-border-light: 40 40 62;
+        --color-divider: 30 30 48;
+        --color-disabled: 53 53 77;
+        --color-placeholder: 107 107 128;
+
+        --color-btn-primary: 74 122 201;
+        --color-btn-primary-text: 255 255 255;
+        --color-btn-secondary: 40 40 62;
+        --color-btn-secondary-text: 240 240 245;
+        --color-btn-disabled: 30 30 48;
+        --color-btn-disabled-text: 136 136 160;
+
+        --color-card: 30 30 48;
+        --color-card-text: 240 240 245;
+        --color-card-accent: 212 175 55;
+    }
+}
