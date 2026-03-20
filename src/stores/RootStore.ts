@@ -15,4 +15,10 @@ export class RootStore {
         this.activityStore = new ActivityStore(this)
         this.cardDetailStore = new CardDetailStore(this)
     }
+
+    reset() {
+        this.homeStore.reset()
+        this.activityStore.reset()
+        this.cardDetailStore.reset()
+    }
 }
