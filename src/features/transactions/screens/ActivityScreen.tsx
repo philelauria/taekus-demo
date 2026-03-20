@@ -12,7 +12,6 @@ import { Text } from '~/shared/components/Text'
 import { Button } from '~/shared/components/Button'
 import { TransactionRow } from '~/features/transactions/components/TransactionRow'
 import { useColors } from '~/shared/hooks/useColors'
-import { useActivityData } from '~/features/transactions/hooks/useActivityData'
 
 type ActivityNav = NativeStackNavigationProp<ActivityStackParamList, 'ActivityScreen'>
 
