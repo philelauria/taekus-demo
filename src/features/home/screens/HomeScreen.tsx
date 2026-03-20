@@ -8,7 +8,6 @@ import type { HomeStackParamList } from '~/navigation/types'
 import { ScreenWrapper } from '~/shared/components/ScreenWrapper'
 import { Text } from '~/shared/components/Text'
 import { Card as UICard } from '~/shared/components/Card'
-import { useTheme } from '~/shared/hooks/useTheme'
 import { PaymentCardTile } from '~/shared/components/PaymentCardTile'
 import { useHomeData } from '~/features/home/hooks/useHomeData'
 
@@ -17,7 +16,6 @@ type HomeNav = NativeStackNavigationProp<HomeStackParamList, 'HomeScreen'>
 const formatCurrency = (n: number) => `$${n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
 
 export const HomeScreen: React.FC = () => {
-    const { theme } = useTheme()
     const navigation = useNavigation<HomeNav>()
     const { creditCards, debitCards, rewards, isLoading, isRefreshing, error, refresh } =
         useHomeData()
@@ -31,31 +29,27 @@ export const HomeScreen: React.FC = () => {
             scroll
             refreshing={isRefreshing}
             onRefresh={refresh}
-            contentStyle={{ gap: theme.spacing.lg }}
+            contentStyle={{ gap: 16 }}
         >
             <View>
-                <Text variant="displaySmall">Accounts</Text>
-                <Text
-                    variant="bodyMedium"
-                    color={theme.colors.textSecondary}
-                    style={{ marginTop: theme.spacing.sm }}
-                >
+                <Text variant="displaySmall" className="text-text-primary">
+                    Accounts
+                </Text>
+                <Text variant="bodyMedium" className="text-text-secondary mt-2">
                     Tap a card to view details
                 </Text>
             </View>
 
             {isLoading ? (
-                <View style={{ paddingTop: theme.spacing.lg }}>
+                <View className="pt-4">
                     <ActivityIndicator />
                 </View>
             ) : error ? (
                 <UICard variant="outlined">
-                    <Text variant="titleMedium">Couldn't load data</Text>
-                    <Text
-                        variant="bodyMedium"
-                        color={theme.colors.textSecondary}
-                        style={{ marginTop: theme.spacing.sm }}
-                    >
+                    <Text variant="titleMedium" className="text-text-primary">
+                        Couldn't load data
+                    </Text>
+                    <Text variant="bodyMedium" className="text-text-secondary mt-2">
                         Something went wrong
                     </Text>
                 </UICard>
@@ -92,15 +86,13 @@ export const HomeScreen: React.FC = () => {
 
                     {rewards && (
                         <UICard variant="outlined">
-                            <Text variant="titleMedium">Rewards</Text>
-                            <Text variant="displaySmall" style={{ marginTop: theme.spacing.sm }}>
+                            <Text variant="titleMedium" className="text-text-primary">
+                                Rewards
+                            </Text>
+                            <Text variant="displaySmall" className="text-text-primary mt-2">
                                 {rewards.points.toLocaleString()} pts
                             </Text>
-                            <Text
-                                variant="bodySmall"
-                                color={theme.colors.textSecondary}
-                                style={{ marginTop: theme.spacing.sm }}
-                            >
+                            <Text variant="bodySmall" className="text-text-secondary mt-2">
                                 {formatCurrency(rewards.cashValue)} value ·{' '}
                                 {rewards.pendingPoints.toLocaleString()} pending
                             </Text>

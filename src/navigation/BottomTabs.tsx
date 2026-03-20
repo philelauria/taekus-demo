@@ -2,7 +2,7 @@ import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { MainTabParamList, HomeStackParamList, ActivityStackParamList } from './types'
-import { useTheme } from '~/shared/hooks/useTheme'
+import { useColors } from '~/shared/hooks/useColors'
 import { HomeScreen } from '~/features/home/screens/HomeScreen'
 import { CardDetailScreen } from '~/features/cards/screens/CardDetailScreen'
 import { TransactionDetailScreen } from '~/features/transactions/screens/TransactionDetailScreen'
@@ -16,15 +16,15 @@ const HomeStack = createNativeStackNavigator<HomeStackParamList>()
 const ActivityStack = createNativeStackNavigator<ActivityStackParamList>()
 
 const HomeStackNavigator: React.FC = () => {
-    const { theme } = useTheme()
+    const colors = useColors()
 
     return (
         <HomeStack.Navigator
             screenOptions={{
                 headerShown: false,
-                headerStyle: { backgroundColor: theme.colors.background },
-                headerTintColor: theme.colors.brand,
-                headerTitleStyle: { color: theme.colors.textPrimary },
+                headerStyle: { backgroundColor: colors.background },
+                headerTintColor: colors.brand,
+                headerTitleStyle: { color: colors.textPrimary },
             }}
         >
             <HomeStack.Screen name="HomeScreen" component={HomeScreen} />
@@ -43,15 +43,15 @@ const HomeStackNavigator: React.FC = () => {
 }
 
 const ActivityStackNavigator: React.FC = () => {
-    const { theme } = useTheme()
+    const colors = useColors()
 
     return (
         <ActivityStack.Navigator
             screenOptions={{
                 headerShown: false,
-                headerStyle: { backgroundColor: theme.colors.background },
-                headerTintColor: theme.colors.brand,
-                headerTitleStyle: { color: theme.colors.textPrimary },
+                headerStyle: { backgroundColor: colors.background },
+                headerTintColor: colors.brand,
+                headerTitleStyle: { color: colors.textPrimary },
             }}
         >
             <ActivityStack.Screen name="ActivityScreen" component={ActivityScreen} />
@@ -69,17 +69,17 @@ const ActivityStackNavigator: React.FC = () => {
 }
 
 export const BottomTabs: React.FC = () => {
-    const { theme } = useTheme()
+    const colors = useColors()
 
     return (
         <Tab.Navigator
             screenOptions={({ route }) => ({
                 headerShown: false,
-                tabBarActiveTintColor: theme.colors.brand,
-                tabBarInactiveTintColor: theme.colors.textTertiary,
+                tabBarActiveTintColor: colors.brand,
+                tabBarInactiveTintColor: colors.textTertiary,
                 tabBarStyle: {
-                    backgroundColor: theme.colors.surface,
-                    borderTopColor: theme.colors.borderLight,
+                    backgroundColor: colors.surface,
+                    borderTopColor: colors.borderLight,
                 },
                 tabBarIcon: ({ color, size }) => {
                     const icons: Record<string, keyof typeof Ionicons.glyphMap> = {

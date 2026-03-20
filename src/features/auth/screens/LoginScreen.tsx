@@ -5,11 +5,11 @@ import { observer } from 'mobx-react-lite'
 import { Text } from '~/shared/components/Text'
 import { TextInput } from '~/shared/components/TextInput'
 import { Button } from '~/shared/components/Button'
-import { useTheme } from '~/shared/hooks/useTheme'
+import { useColors } from '~/shared/hooks/useColors'
 import { useStores } from '~/mobxStores/StoreProvider'
 
 export const LoginScreen: React.FC = observer(() => {
-    const { theme } = useTheme()
+    const colors = useColors()
     const { authStore } = useStores()
 
     const [email, setEmail] = useState('')
@@ -35,29 +35,25 @@ export const LoginScreen: React.FC = observer(() => {
         <ScreenWrapper scroll>
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                style={{ flex: 1 }}
+                className="flex-1"
             >
-                <View style={{ flex: 1, justifyContent: 'center' }}>
-                    <View style={{ alignItems: 'center', marginBottom: theme.spacing['3xl'] }}>
+                <View className="flex-1 justify-center">
+                    <View className="items-center mb-8">
                         <Image
                             source={require('../../../../assets/taekus-logo.png')}
                             style={{
                                 width: 200,
                                 height: 60,
-                                tintColor: theme.colors.textPrimary,
+                                tintColor: colors.textPrimary,
                             }}
                             resizeMode="contain"
                         />
-                        <Text
-                            variant="bodyMedium"
-                            color={theme.colors.textSecondary}
-                            style={{ marginTop: theme.spacing.sm }}
-                        >
+                        <Text variant="bodyMedium" className="text-text-secondary mt-2">
                             Sign in to your account
                         </Text>
                     </View>
 
-                    <View style={{ gap: theme.spacing.lg }}>
+                    <View className="gap-4">
                         <TextInput
                             label="Email"
                             value={email}
@@ -96,7 +92,7 @@ export const LoginScreen: React.FC = observer(() => {
                         />
 
                         {authStore.error && email.trim() && password.trim() && (
-                            <Text variant="bodySmall" color={theme.colors.error}>
+                            <Text variant="bodySmall" className="text-error">
                                 {authStore.error}
                             </Text>
                         )}
