@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import { Pressable, StyleSheet, ActivityIndicator, PressableProps, ViewStyle } from 'react-native'
-import { useTheme } from '../hooks/useTheme'
+import { Pressable, ActivityIndicator, PressableProps, ViewStyle, StyleSheet } from 'react-native'
 import { Text } from '~/shared/components/Text'
 
 type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger'
@@ -12,19 +11,28 @@ export interface ButtonProps extends Omit<PressableProps, 'children'> {
     size?: ButtonSize
     loading?: boolean
     fullWidth?: boolean
+    className?: string
 }
 
-const styles = StyleSheet.create({
-    base: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 12,
-    },
-    fullWidth: {
-        width: '100%',
-    },
-})
+const sizeClasses: Record<ButtonSize, string> = {
+    sm: 'px-3 min-h-[36px]',
+    md: 'px-5 min-h-[44px]',
+    lg: 'px-6 min-h-[52px]',
+}
+
+const variantClasses: Record<ButtonVariant, string> = {
+    primary: 'bg-btn-primary',
+    secondary: 'bg-btn-secondary border border-border',
+    ghost: 'bg-transparent',
+    danger: 'bg-error',
+}
+
+const textClasses: Record<ButtonVariant, string> = {
+    primary: 'text-btn-primary-text',
+    secondary: 'text-btn-secondary-text',
+    ghost: 'text-brand',
+    danger: 'text-white',
+}
 
 export const Button: React.FC<ButtonProps> = ({
     label,
@@ -33,72 +41,28 @@ export const Button: React.FC<ButtonProps> = ({
     loading = false,
     disabled,
     fullWidth = false,
+    className = '',
     style,
     ...props
 }) => {
-    const { theme } = useTheme()
     const [pressed, setPressed] = useState(false)
     const isDisabled = disabled || loading
-
-    const sizeStyles = {
-        sm: { paddingHorizontal: 12, minHeight: 36 },
-        md: { paddingHorizontal: 20, minHeight: 44 },
-        lg: { paddingHorizontal: 24, minHeight: 52 },
-    }
-
-    const variantColors = {
-        primary: {
-            bg: theme.colors.buttonPrimary,
-            text: theme.colors.buttonPrimaryText,
-            border: 'transparent',
-        },
-        secondary: {
-            bg: theme.colors.buttonSecondary,
-            text: theme.colors.buttonSecondaryText,
-            border: theme.colors.border,
-        },
-        ghost: {
-            bg: 'transparent',
-            text: theme.colors.brand,
-            border: 'transparent',
-        },
-        danger: {
-            bg: theme.colors.error,
-            text: '#FFFFFF',
-            border: 'transparent',
-        },
-    }
-
-    const colors = variantColors[variant]
 
     return (
         <Pressable
             disabled={isDisabled}
             onPressIn={() => setPressed(true)}
             onPressOut={() => setPressed(false)}
-            style={StyleSheet.flatten([
-                styles.base,
-                sizeStyles[size],
-                fullWidth && styles.fullWidth,
-                {
-                    backgroundColor: colors.bg,
-                    borderColor: colors.border,
-                    borderWidth: variant === 'secondary' ? 1 : 0,
-                    opacity: pressed ? 0.7 : 1,
-                },
-                style as ViewStyle,
-            ])}
+            className={`flex-row items-center justify-center rounded-xl ${sizeClasses[size]} ${variantClasses[variant]} ${fullWidth ? 'w-full' : ''} ${className}`}
+            style={StyleSheet.flatten([{ opacity: pressed ? 0.7 : 1 }, style as ViewStyle])}
             {...props}
         >
             {loading ? (
-                <ActivityIndicator
-                    color={isDisabled ? theme.colors.buttonDisabledText : colors.text}
-                    size="small"
-                />
+                <ActivityIndicator size="small" />
             ) : (
                 <Text
                     variant={size === 'sm' ? 'bodyMedium' : 'labelLarge'}
-                    color={isDisabled ? theme.colors.buttonDisabledText : colors.text}
+                    className={isDisabled ? 'text-btn-disabled-text' : textClasses[variant]}
                 >
                     {label}
                 </Text>

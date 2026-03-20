@@ -1,7 +1,8 @@
 import React from 'react'
 import { View, ScrollView, StatusBar, ViewStyle, RefreshControl } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useTheme } from '~/shared/hooks/useTheme'
+import { useColorScheme } from 'nativewind'
+import { useColors } from '~/shared/hooks/useColors'
 
 export interface ScreenWrapperProps {
     children: React.ReactNode
@@ -10,6 +11,7 @@ export interface ScreenWrapperProps {
     onRefresh?: () => void
     style?: ViewStyle
     contentStyle?: ViewStyle
+    className?: string
 }
 
 export const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
@@ -19,12 +21,15 @@ export const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
     onRefresh,
     style,
     contentStyle,
+    className = '',
 }) => {
-    const { theme, isDark } = useTheme()
+    const { colorScheme } = useColorScheme()
+    const colors = useColors()
+    const isDark = colorScheme === 'dark'
 
     const content = scroll ? (
         <ScrollView
-            contentContainerStyle={[{ flexGrow: 1, padding: theme.spacing.lg }, contentStyle]}
+            contentContainerStyle={[{ flexGrow: 1, padding: 16 }, contentStyle]}
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
             refreshControl={
@@ -32,7 +37,7 @@ export const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
                     <RefreshControl
                         refreshing={refreshing ?? false}
                         onRefresh={onRefresh}
-                        tintColor={theme.colors.brand}
+                        tintColor={colors.brand}
                     />
                 ) : undefined
             }
@@ -40,14 +45,14 @@ export const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
             {children}
         </ScrollView>
     ) : (
-        <View style={[{ flex: 1, padding: theme.spacing.lg }, contentStyle]}>{children}</View>
+        <View style={[{ flex: 1, padding: 16 }, contentStyle]}>{children}</View>
     )
 
     return (
-        <SafeAreaView style={[{ flex: 1, backgroundColor: theme.colors.background }, style]}>
+        <SafeAreaView className={`flex-1 bg-background ${className}`} style={style}>
             <StatusBar
                 barStyle={isDark ? 'light-content' : 'dark-content'}
-                backgroundColor={theme.colors.background}
+                backgroundColor={colors.background}
             />
             {content}
         </SafeAreaView>

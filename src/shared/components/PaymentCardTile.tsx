@@ -3,14 +3,8 @@ import { View } from 'react-native'
 import type { Card as CardModel } from '~/shared/types'
 import { Card } from '~/shared/components/Card'
 import { Text } from '~/shared/components/Text'
-import { useTheme } from '~/shared/hooks/useTheme'
-import Animated, {
-    FadeIn,
-    FadeOut,
-    useSharedValue,
-    useAnimatedStyle,
-    withTiming,
-} from 'react-native-reanimated'
+import { useColors } from '~/shared/hooks/useColors'
+import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated'
 
 const formatCurrency = (n: number) => `$${n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
 
@@ -26,14 +20,13 @@ type Props = {
 }
 
 export const PaymentCardTile: React.FC<Props> = ({ card, onPress }) => {
-    const { theme } = useTheme()
+    const themeColors = useColors()
     const isCredit = card.type === 'credit'
     const isFrozen = card.status === 'frozen'
 
     const frozenOpacity = useSharedValue(isFrozen ? 1 : 0)
 
     useEffect(() => {
-        console.log('Freeze changed:', isFrozen)
         frozenOpacity.value = withTiming(isFrozen ? 1 : 0, { duration: 3000 })
     }, [isFrozen])
 
@@ -42,9 +35,9 @@ export const PaymentCardTile: React.FC<Props> = ({ card, onPress }) => {
     }))
 
     const colors = card.colorScheme ?? {
-        background: theme.colors.surface,
-        foreground: theme.colors.textPrimary,
-        subtle: theme.colors.textSecondary,
+        background: themeColors.surface,
+        foreground: themeColors.textPrimary,
+        subtle: themeColors.textSecondary,
         accent: 'rgba(0,0,0,0.05)',
     }
 
@@ -64,121 +57,78 @@ export const PaymentCardTile: React.FC<Props> = ({ card, onPress }) => {
         <Card
             variant="default"
             onPress={onPress}
-            style={{
-                padding: 0,
-                backgroundColor: 'transparent',
-            }}
+            style={{ padding: 0, backgroundColor: 'transparent' }}
         >
             <View
                 style={{
                     width: '100%',
                     height: 200,
-                    borderRadius: theme.borderRadius.lg,
+                    borderRadius: 12,
                     backgroundColor: bg,
-                    padding: theme.spacing.lg,
+                    padding: 16,
                     overflow: 'hidden',
                     borderWidth: isCredit ? 0 : 1,
-                    borderColor: theme.colors.borderLight,
-                    justifyContent: 'space-between',
+                    borderColor: themeColors.borderLight,
                 }}
+                className="justify-between"
             >
-                {/* Top row */}
-                <View
-                    style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                    }}
-                >
+                <View className="flex-row justify-between items-center">
                     <View>
-                        <Text variant="labelLarge" color={fg}>
+                        <Text variant="labelLarge" style={{ color: fg }}>
                             {isCredit ? 'CREDIT' : 'DEBIT'}
                         </Text>
-                        <Text
-                            variant="bodySmall"
-                            color={fgSubtle}
-                            style={{ marginTop: theme.spacing.xs }}
-                        >
+                        <Text variant="bodySmall" className="mt-1" style={{ color: fgSubtle }}>
                             {card.name}
                         </Text>
                     </View>
-                    <Text variant="labelLarge" color={fg}>
+                    <Text variant="labelLarge" style={{ color: fg }}>
                         {isCredit ? 'VISA' : 'MC'}
                     </Text>
                 </View>
 
-                {/* Middle — balance */}
                 <View>
-                    <Text variant="titleMedium" color={fg}>
+                    <Text variant="titleMedium" style={{ color: fg }}>
                         {primaryLine}
                     </Text>
-                    <Text
-                        variant="bodySmall"
-                        color={fgSubtle}
-                        style={{ marginTop: theme.spacing.xs }}
-                    >
+                    <Text variant="bodySmall" className="mt-1" style={{ color: fgSubtle }}>
                         {secondaryLine}
                     </Text>
                 </View>
 
-                {/* Bottom — card number + expiry */}
-                <View
-                    style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        alignItems: 'flex-end',
-                    }}
-                >
+                <View className="flex-row justify-between items-end">
                     <View>
-                        <Text variant="bodySmall" color={fgSubtle}>
+                        <Text variant="bodySmall" style={{ color: fgSubtle }}>
                             CARD NUMBER
                         </Text>
-                        <Text
-                            variant="titleMedium"
-                            color={fg}
-                            style={{ marginTop: theme.spacing.xs }}
-                        >
+                        <Text variant="titleMedium" className="mt-1" style={{ color: fg }}>
                             •••• {card.lastFour}
                         </Text>
                     </View>
-                    <View style={{ alignItems: 'flex-end' }}>
-                        <Text variant="bodySmall" color={fgSubtle}>
+                    <View className="items-end">
+                        <Text variant="bodySmall" style={{ color: fgSubtle }}>
                             EXP
                         </Text>
-                        <Text
-                            variant="titleMedium"
-                            color={fg}
-                            style={{ marginTop: theme.spacing.xs }}
-                        >
+                        <Text variant="titleMedium" className="mt-1" style={{ color: fg }}>
                             {formatExpiry(card.expiryMonth, card.expiryYear)}
                         </Text>
                     </View>
                 </View>
 
-                {/* Frozen overlay */}
-                {/* {isFrozen && ( */}
                 <Animated.View
                     pointerEvents={isFrozen ? 'auto' : 'none'}
+                    className="absolute top-0 left-0 right-0 bottom-0 justify-center items-center"
                     style={[
                         {
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                            bottom: 0,
                             backgroundColor: 'rgba(0,0,0,0.5)',
-                            borderRadius: theme.borderRadius.lg,
-                            justifyContent: 'center',
-                            alignItems: 'center',
+                            borderRadius: 12,
                         },
                         frozenStyle,
                     ]}
                 >
-                    <Text variant="displaySmall" color="#FFFFFF">
+                    <Text variant="displaySmall" style={{ color: '#FFFFFF' }}>
                         FROZEN
                     </Text>
                 </Animated.View>
-                {/* )} */}
             </View>
         </Card>
     )
