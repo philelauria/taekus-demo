@@ -3,20 +3,19 @@ import { View, FlatList, TextInput as RNTextInput } from 'react-native'
 import { FlashList } from '@shopify/flash-list'
 import { useNavigation } from '@react-navigation/native'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
-
 import type { ActivityStackParamList } from '~/navigation/types'
 import type { Transaction } from '~/shared/types'
 import { ScreenWrapper } from '~/shared/components/ScreenWrapper'
 import { Text } from '~/shared/components/Text'
 import { Button } from '~/shared/components/Button'
 import { TransactionRow } from '~/features/transactions/components/TransactionRow'
-import { useTheme } from '~/shared/hooks/useTheme'
+import { useColors } from '~/shared/hooks/useColors'
 import { useActivityData } from '~/features/transactions/hooks/useActivityData'
 
 type ActivityNav = NativeStackNavigationProp<ActivityStackParamList, 'ActivityScreen'>
 
 export const ActivityScreen: React.FC = () => {
-    const { theme } = useTheme()
+    const colors = useColors()
     const navigation = useNavigation<ActivityNav>()
     const { transactions, totalCount, isLoading, isRefreshing, search, setSearch, refetch } =
         useActivityData()
@@ -40,13 +39,11 @@ export const ActivityScreen: React.FC = () => {
     const keyExtractor = useCallback((item: Transaction) => item.id, [])
 
     const listHeader = (
-        <View style={{ paddingHorizontal: theme.spacing.lg, paddingBottom: theme.spacing.md }}>
-            <Text variant="displaySmall">Activity</Text>
-            <Text
-                variant="bodySmall"
-                color={theme.colors.textSecondary}
-                style={{ marginTop: theme.spacing.xs }}
-            >
+        <View className="px-4 pb-3">
+            <Text variant="displaySmall" className="text-text-primary">
+                Activity
+            </Text>
+            <Text variant="bodySmall" className="text-text-secondary mt-1">
                 {totalCount.toLocaleString()} transactions ·{' '}
                 {useFlashList ? 'FlashList' : 'FlatList'}
             </Text>
@@ -55,26 +52,12 @@ export const ActivityScreen: React.FC = () => {
                 value={search}
                 onChangeText={setSearch}
                 placeholder="Search transactions..."
-                placeholderTextColor={theme.colors.placeholder}
-                style={[
-                    theme.typography.bodyMedium,
-                    {
-                        color: theme.colors.textPrimary,
-                        backgroundColor: theme.colors.backgroundSecondary,
-                        borderRadius: theme.borderRadius.md,
-                        borderWidth: 1,
-                        borderColor: theme.colors.border,
-                        paddingHorizontal: theme.spacing.md,
-                        paddingVertical: theme.spacing.sm,
-                        marginTop: theme.spacing.md,
-                    },
-                ]}
+                placeholderTextColor={colors.placeholder}
+                className="text-[14px] leading-[20px] text-text-primary bg-background-secondary rounded-lg border border-border px-3 py-2 mt-3"
             />
 
-            <View
-                style={{ flexDirection: 'row', gap: theme.spacing.sm, marginTop: theme.spacing.md }}
-            >
-                <View style={{ flex: 1 }}>
+            <View className="flex-row gap-2 mt-3">
+                <View className="flex-1">
                     <Button
                         label="FlashList"
                         variant={useFlashList ? 'primary' : 'secondary'}
@@ -82,7 +65,7 @@ export const ActivityScreen: React.FC = () => {
                         onPress={() => setUseFlashList(true)}
                     />
                 </View>
-                <View style={{ flex: 1 }}>
+                <View className="flex-1">
                     <Button
                         label="FlatList"
                         variant={!useFlashList ? 'primary' : 'secondary'}
@@ -95,12 +78,7 @@ export const ActivityScreen: React.FC = () => {
     )
 
     const emptyComponent = (
-        <Text
-            variant="bodyMedium"
-            color={theme.colors.textSecondary}
-            align="center"
-            style={{ paddingTop: theme.spacing.lg }}
-        >
+        <Text variant="bodyMedium" className="text-text-secondary text-center pt-4">
             {isLoading ? 'Loading transactions...' : 'No transactions found'}
         </Text>
     )

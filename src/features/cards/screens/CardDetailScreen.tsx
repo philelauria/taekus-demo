@@ -4,7 +4,6 @@ import { useNavigation, useRoute, RouteProp } from '@react-navigation/native'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import * as LocalAuthentication from 'expo-local-authentication'
 import * as Haptics from 'expo-haptics'
-
 import type { HomeStackParamList } from '~/navigation/types'
 import type { Transaction } from '~/shared/types'
 import { ScreenWrapper } from '~/shared/components/ScreenWrapper'
@@ -13,15 +12,14 @@ import { Button } from '~/shared/components/Button'
 import { Card as UICard } from '~/shared/components/Card'
 import { TransactionRow } from '~/features/transactions/components/TransactionRow'
 import { PaymentCardTile } from '~/shared/components/PaymentCardTile'
-import { useTheme } from '~/shared/hooks/useTheme'
+
 import { useCardDetailData } from '~/features/cards/hooks/useCardDetailData'
-import { formatCurrency, formatCardExpiry } from '~/shared/services/format'
+import { formatCardExpiry } from '~/shared/services/format'
 
 type CardDetailRoute = RouteProp<HomeStackParamList, 'CardDetail'>
 type CardDetailNav = NativeStackNavigationProp<HomeStackParamList, 'CardDetail'>
 
 export const CardDetailScreen: React.FC = () => {
-    const { theme } = useTheme()
     const route = useRoute<CardDetailRoute>()
     const navigation = useNavigation<CardDetailNav>()
 
@@ -59,11 +57,11 @@ export const CardDetailScreen: React.FC = () => {
 
     const renderHeader = useMemo(
         () => (
-            <View style={{ gap: theme.spacing.lg, paddingBottom: theme.spacing.md }}>
+            <View className="gap-4 pb-3">
                 <PaymentCardTile card={displayCard} onPress={() => {}} />
 
-                <View style={{ flexDirection: 'row', gap: theme.spacing.md }}>
-                    <View style={{ flex: 1 }}>
+                <View className="flex-row gap-3">
+                    <View className="flex-1">
                         <Button
                             label={isFrozen ? 'Unfreeze Card' : 'Freeze Card'}
                             variant={isFrozen ? 'primary' : 'danger'}
@@ -72,7 +70,7 @@ export const CardDetailScreen: React.FC = () => {
                             fullWidth
                         />
                     </View>
-                    <View style={{ flex: 1 }}>
+                    <View className="flex-1">
                         <Button
                             label={revealedNumber ? 'Hide Number' : 'Reveal'}
                             variant="secondary"
@@ -91,24 +89,18 @@ export const CardDetailScreen: React.FC = () => {
 
                 {revealedNumber && (
                     <UICard variant="outlined">
-                        <Text variant="bodySmall" color={theme.colors.textSecondary}>
+                        <Text variant="bodySmall" className="text-text-secondary">
                             Card Number
                         </Text>
-                        <Text variant="titleMedium" style={{ marginTop: theme.spacing.xs }}>
+                        <Text variant="titleMedium" className="mt-1">
                             {revealedNumber}
                         </Text>
-                        <View
-                            style={{
-                                flexDirection: 'row',
-                                marginTop: theme.spacing.md,
-                                gap: theme.spacing['2xl'],
-                            }}
-                        >
+                        <View className="flex-row mt-3 gap-6">
                             <View>
-                                <Text variant="bodySmall" color={theme.colors.textSecondary}>
+                                <Text variant="bodySmall" className="text-text-secondary">
                                     Expiry
                                 </Text>
-                                <Text variant="titleMedium" style={{ marginTop: theme.spacing.xs }}>
+                                <Text variant="titleMedium" className="text-text-primary mt-1">
                                     {formatCardExpiry(
                                         displayCard.expiryMonth,
                                         displayCard.expiryYear,
@@ -116,10 +108,10 @@ export const CardDetailScreen: React.FC = () => {
                                 </Text>
                             </View>
                             <View>
-                                <Text variant="bodySmall" color={theme.colors.textSecondary}>
+                                <Text variant="bodySmall" className="text-text-secondary">
                                     CVV
                                 </Text>
-                                <Text variant="titleMedium" style={{ marginTop: theme.spacing.xs }}>
+                                <Text variant="titleMedium" className="text-text-primary mt-1">
                                     {revealedCvv}
                                 </Text>
                             </View>
@@ -127,7 +119,7 @@ export const CardDetailScreen: React.FC = () => {
                     </UICard>
                 )}
 
-                <Text variant="titleMedium" style={{ marginTop: theme.spacing.sm }}>
+                <Text variant="titleMedium" className="text-text-primary mt-2">
                     Recent Transactions
                 </Text>
             </View>
@@ -145,18 +137,13 @@ export const CardDetailScreen: React.FC = () => {
                 )}
                 ListHeaderComponent={renderHeader}
                 ListEmptyComponent={
-                    <Text
-                        variant="bodyMedium"
-                        color={theme.colors.textSecondary}
-                        align="center"
-                        style={{ paddingTop: theme.spacing.lg }}
-                    >
+                    <Text variant="bodyMedium" className="text-text-secondary text-center pt-4">
                         {isLoading ? 'Loading transactions...' : 'No transactions yet'}
                     </Text>
                 }
                 refreshing={isRefreshing}
                 onRefresh={refetch}
-                contentContainerStyle={{ padding: theme.spacing.lg }}
+                contentContainerStyle={{ padding: 16 }}
             />
         </ScreenWrapper>
     )
