@@ -1,7 +1,7 @@
 import { makeAutoObservable, runInAction } from 'mobx'
 import { Card, RewardsBalance } from '~/shared/types'
 import { mockApi } from '~/shared/services/mockApi'
-import type { RootStore } from '~/mobxStores/RootStore'
+import type { RootStore } from '~/stores/RootStore'
 
 export class HomeStore {
     cards: Card[] = []

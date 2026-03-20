@@ -10,7 +10,7 @@ import { Text } from '~/shared/components/Text'
 import { Card as UICard } from '~/shared/components/Card'
 import { PaymentCardTile } from '~/shared/components/PaymentCardTile'
 import { observer } from 'mobx-react-lite'
-import { useStores } from '~/mobxStores/StoreProvider'
+import { useStores } from '~/stores/StoreProvider'
 
 type HomeNav = NativeStackNavigationProp<HomeStackParamList, 'HomeScreen'>
 

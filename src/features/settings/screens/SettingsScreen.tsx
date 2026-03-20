@@ -6,7 +6,7 @@ import { ScreenWrapper } from '~/shared/components/ScreenWrapper'
 import { Text } from '~/shared/components/Text'
 import { Button } from '~/shared/components/Button'
 import { Card as UICard } from '~/shared/components/Card'
-import { useStores } from '~/mobxStores/StoreProvider'
+import { useStores } from '~/stores/StoreProvider'
 
 type ThemeMode = 'system' | 'light' | 'dark'
 

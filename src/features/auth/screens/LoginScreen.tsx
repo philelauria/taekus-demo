@@ -6,7 +6,7 @@ import { Text } from '~/shared/components/Text'
 import { TextInput } from '~/shared/components/TextInput'
 import { Button } from '~/shared/components/Button'
 import { useColors } from '~/shared/hooks/useColors'
-import { useStores } from '~/mobxStores/StoreProvider'
+import { useStores } from '~/stores/StoreProvider'
 
 export const LoginScreen: React.FC = observer(() => {
     const colors = useColors()

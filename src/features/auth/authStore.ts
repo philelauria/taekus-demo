@@ -3,7 +3,7 @@ import { User, LoginRequest } from '~/shared/types'
 import { mockApi } from '~/shared/services/mockApi'
 import { secureStorage } from '~/shared/services/deviceStorage'
 import { MOCK_USER } from '~/shared/services/mockData'
-import type { RootStore } from '~/mobxStores/RootStore'
+import type { RootStore } from '~/stores/RootStore'
 
 export class AuthStore {
     user: User | null = null
