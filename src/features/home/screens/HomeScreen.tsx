@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
@@ -9,26 +9,30 @@ import { ScreenWrapper } from '~/shared/components/ScreenWrapper'
 import { Text } from '~/shared/components/Text'
 import { Card as UICard } from '~/shared/components/Card'
 import { PaymentCardTile } from '~/shared/components/PaymentCardTile'
-import { useHomeData } from '~/features/home/hooks/useHomeData'
+import { observer } from 'mobx-react-lite'
+import { useStores } from '~/mobxStores/StoreProvider'
 
 type HomeNav = NativeStackNavigationProp<HomeStackParamList, 'HomeScreen'>
 
 const formatCurrency = (n: number) => `$${n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
 
-export const HomeScreen: React.FC = () => {
+export const HomeScreen: React.FC = observer(() => {
     const navigation = useNavigation<HomeNav>()
-    const { creditCards, debitCards, rewards, isLoading, isRefreshing, error, refresh } =
-        useHomeData()
+    const { homeStore } = useStores()
 
     const goToCardDetail = (card: Card) => {
         navigation.navigate('CardDetail', { card })
     }
 
+    useEffect(() => {
+        homeStore.fetchData()
+    }, [homeStore])
+
     return (
         <ScreenWrapper
             scroll
-            refreshing={isRefreshing}
-            onRefresh={refresh}
+            refreshing={homeStore.isRefreshing}
+            onRefresh={homeStore.fetchData}
             contentStyle={{ gap: 16 }}
         >
             <View>
@@ -40,11 +44,11 @@ export const HomeScreen: React.FC = () => {
                 </Text>
             </View>
 
-            {isLoading ? (
+            {homeStore.isLoading ? (
                 <View className="pt-4">
                     <ActivityIndicator />
                 </View>
-            ) : error ? (
+            ) : homeStore.error ? (
                 <UICard variant="outlined">
                     <Text variant="titleMedium" className="text-text-primary">
                         Couldn't load data
@@ -55,7 +59,7 @@ export const HomeScreen: React.FC = () => {
                 </UICard>
             ) : (
                 <>
-                    {creditCards.map((card, index) => (
+                    {homeStore.creditCards.map((card, index) => (
                         <Animated.View
                             key={card.id}
                             entering={FadeInDown.delay(index * 100)
@@ -69,7 +73,7 @@ export const HomeScreen: React.FC = () => {
                             />
                         </Animated.View>
                     ))}
-                    {debitCards.map((card, index) => (
+                    {homeStore.debitCards.map((card, index) => (
                         <Animated.View
                             key={card.id}
                             entering={FadeInDown.delay(index * 100)
@@ -84,17 +88,17 @@ export const HomeScreen: React.FC = () => {
                         </Animated.View>
                     ))}
 
-                    {rewards && (
+                    {homeStore.rewards && (
                         <UICard variant="outlined">
                             <Text variant="titleMedium" className="text-text-primary">
                                 Rewards
                             </Text>
                             <Text variant="displaySmall" className="text-text-primary mt-2">
-                                {rewards.points.toLocaleString()} pts
+                                {homeStore.rewards.points.toLocaleString()} pts
                             </Text>
                             <Text variant="bodySmall" className="text-text-secondary mt-2">
-                                {formatCurrency(rewards.cashValue)} value ·{' '}
-                                {rewards.pendingPoints.toLocaleString()} pending
+                                {formatCurrency(homeStore.rewards.cashValue)} value ·{' '}
+                                {homeStore.rewards.pendingPoints.toLocaleString()} pending
                             </Text>
                         </UICard>
                     )}
@@ -102,4 +106,4 @@ export const HomeScreen: React.FC = () => {
             )}
         </ScreenWrapper>
     )
-}
+})
