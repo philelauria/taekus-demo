@@ -1,4 +1,4 @@
-import { RootStore } from '~/mobxStores/RootStore'
+import { RootStore } from '~/stores/RootStore'
 
 const mockUser = {
     id: 'usr-001',

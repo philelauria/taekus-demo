@@ -14,7 +14,7 @@ import { TransactionRow } from '~/features/transactions/components/TransactionRo
 import { PaymentCardTile } from '~/shared/components/PaymentCardTile'
 import { formatCardExpiry } from '~/shared/services/format'
 import { observer } from 'mobx-react-lite'
-import { useStores } from '~/mobxStores/StoreProvider'
+import { useStores } from '~/stores/StoreProvider'
 
 type CardDetailRoute = RouteProp<HomeStackParamList, 'CardDetail'>
 type CardDetailNav = NativeStackNavigationProp<HomeStackParamList, 'CardDetail'>

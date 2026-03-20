@@ -5,7 +5,7 @@ import { observer } from 'mobx-react-lite'
 import { useColorScheme } from 'nativewind'
 import { AuthStack } from './AuthStack'
 import { BottomTabs } from './BottomTabs'
-import { useStores } from '~/mobxStores/StoreProvider'
+import { useStores } from '~/stores/StoreProvider'
 import { useColors } from '~/shared/hooks/useColors'
 
 SplashScreen.preventAutoHideAsync()
