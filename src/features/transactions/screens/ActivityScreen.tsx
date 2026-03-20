@@ -1,7 +1,9 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { View, FlatList, TextInput as RNTextInput } from 'react-native'
 import { FlashList } from '@shopify/flash-list'
 import { useNavigation } from '@react-navigation/native'
+import { observer } from 'mobx-react-lite'
+import { useStores } from '~/mobxStores/StoreProvider'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import type { ActivityStackParamList } from '~/navigation/types'
 import type { Transaction } from '~/shared/types'
@@ -10,15 +12,17 @@ import { Text } from '~/shared/components/Text'
 import { Button } from '~/shared/components/Button'
 import { TransactionRow } from '~/features/transactions/components/TransactionRow'
 import { useColors } from '~/shared/hooks/useColors'
-import { useActivityData } from '~/features/transactions/hooks/useActivityData'
 
 type ActivityNav = NativeStackNavigationProp<ActivityStackParamList, 'ActivityScreen'>
 
-export const ActivityScreen: React.FC = () => {
+export const ActivityScreen: React.FC = observer(() => {
     const colors = useColors()
+    const { activityStore } = useStores()
     const navigation = useNavigation<ActivityNav>()
-    const { transactions, totalCount, isLoading, isRefreshing, search, setSearch, refetch } =
-        useActivityData()
+
+    useEffect(() => {
+        activityStore.fetchTransactions()
+    }, [activityStore])
 
     const [useFlashList, setUseFlashList] = useState(true)
 
@@ -44,13 +48,13 @@ export const ActivityScreen: React.FC = () => {
                 Activity
             </Text>
             <Text variant="bodySmall" className="text-text-secondary mt-1">
-                {totalCount.toLocaleString()} transactions ·{' '}
+                {activityStore.totalCount.toLocaleString()} transactions ·{' '}
                 {useFlashList ? 'FlashList' : 'FlatList'}
             </Text>
 
             <RNTextInput
-                value={search}
-                onChangeText={setSearch}
+                value={activityStore.search}
+                onChangeText={(text) => activityStore.setSearch(text)}
                 placeholder="Search transactions..."
                 placeholderTextColor={colors.placeholder}
                 className="text-[14px] leading-[20px] text-text-primary bg-background-secondary rounded-lg border border-border px-3 py-2 mt-3"
@@ -79,7 +83,7 @@ export const ActivityScreen: React.FC = () => {
 
     const emptyComponent = (
         <Text variant="bodyMedium" className="text-text-secondary text-center pt-4">
-            {isLoading ? 'Loading transactions...' : 'No transactions found'}
+            {activityStore.isLoading ? 'Loading transactions...' : 'No transactions found'}
         </Text>
     )
 
@@ -87,25 +91,25 @@ export const ActivityScreen: React.FC = () => {
         <ScreenWrapper>
             {useFlashList ? (
                 <FlashList
-                    data={transactions}
+                    data={activityStore.transactions}
                     renderItem={renderItem}
                     keyExtractor={keyExtractor}
                     ListHeaderComponent={listHeader}
                     ListEmptyComponent={emptyComponent}
-                    refreshing={isRefreshing}
-                    onRefresh={refetch}
+                    refreshing={activityStore.isRefreshing}
+                    onRefresh={activityStore.fetchTransactions}
                 />
             ) : (
                 <FlatList
-                    data={transactions}
+                    data={activityStore.transactions}
                     renderItem={renderItem}
                     keyExtractor={keyExtractor}
                     ListHeaderComponent={listHeader}
                     ListEmptyComponent={emptyComponent}
-                    refreshing={isRefreshing}
-                    onRefresh={refetch}
+                    refreshing={activityStore.isRefreshing}
+                    onRefresh={activityStore.fetchTransactions}
                 />
             )}
         </ScreenWrapper>
     )
-}
+})

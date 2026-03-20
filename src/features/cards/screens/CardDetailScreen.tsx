@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react'
+import React, { useState, useCallback, useMemo, useEffect } from 'react'
 import { View, FlatList } from 'react-native'
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
@@ -12,24 +12,26 @@ import { Button } from '~/shared/components/Button'
 import { Card as UICard } from '~/shared/components/Card'
 import { TransactionRow } from '~/features/transactions/components/TransactionRow'
 import { PaymentCardTile } from '~/shared/components/PaymentCardTile'
-
-import { useCardDetailData } from '~/features/cards/hooks/useCardDetailData'
 import { formatCardExpiry } from '~/shared/services/format'
+import { observer } from 'mobx-react-lite'
+import { useStores } from '~/mobxStores/StoreProvider'
 
 type CardDetailRoute = RouteProp<HomeStackParamList, 'CardDetail'>
 type CardDetailNav = NativeStackNavigationProp<HomeStackParamList, 'CardDetail'>
 
-export const CardDetailScreen: React.FC = () => {
+export const CardDetailScreen: React.FC = observer(() => {
+    const { cardDetailStore } = useStores()
     const route = useRoute<CardDetailRoute>()
     const navigation = useNavigation<CardDetailNav>()
 
-    const { card, transactions, isLoading, isRefreshing, isToggling, handleToggleFreeze, refetch } =
-        useCardDetailData(route.params.card.id)
+    useEffect(() => {
+        cardDetailStore.fetchData(route.params.card.id)
+    }, [cardDetailStore, route.params.card.id])
 
     const [revealedNumber, setRevealedNumber] = useState<string | null>(null)
     const [revealedCvv, setRevealedCvv] = useState<string | null>(null)
 
-    const displayCard = card ?? route.params.card
+    const displayCard = cardDetailStore.card ?? route.params.card
     const isFrozen = displayCard.status === 'frozen'
 
     const handleRevealCard = useCallback(async () => {
@@ -47,9 +49,9 @@ export const CardDetailScreen: React.FC = () => {
     }, [])
 
     const handleFreeze = useCallback(async () => {
-        await handleToggleFreeze()
+        await cardDetailStore.toggleCardFreeze(route.params.card.id)
         await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
-    }, [handleToggleFreeze])
+    }, [cardDetailStore, route.params.card.id])
 
     const goToTransaction = (transaction: Transaction) => {
         navigation.navigate('TransactionDetail', { transaction })
@@ -66,7 +68,7 @@ export const CardDetailScreen: React.FC = () => {
                             label={isFrozen ? 'Unfreeze Card' : 'Freeze Card'}
                             variant={isFrozen ? 'primary' : 'danger'}
                             onPress={handleFreeze}
-                            loading={isToggling}
+                            loading={cardDetailStore.isToggling}
                             fullWidth
                         />
                     </View>
@@ -124,13 +126,13 @@ export const CardDetailScreen: React.FC = () => {
                 </Text>
             </View>
         ),
-        [displayCard, isFrozen, isToggling, revealedNumber, revealedCvv],
+        [displayCard, isFrozen, cardDetailStore.isToggling, revealedNumber, revealedCvv],
     )
 
     return (
         <ScreenWrapper>
             <FlatList
-                data={transactions}
+                data={cardDetailStore.transactions}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
                     <TransactionRow transaction={item} onPress={() => goToTransaction(item)} />
@@ -138,13 +140,15 @@ export const CardDetailScreen: React.FC = () => {
                 ListHeaderComponent={renderHeader}
                 ListEmptyComponent={
                     <Text variant="bodyMedium" className="text-text-secondary text-center pt-4">
-                        {isLoading ? 'Loading transactions...' : 'No transactions yet'}
+                        {cardDetailStore.isLoading
+                            ? 'Loading transactions...'
+                            : 'No transactions yet'}
                     </Text>
                 }
-                refreshing={isRefreshing}
-                onRefresh={refetch}
+                refreshing={cardDetailStore.isRefreshing}
+                onRefresh={() => cardDetailStore.fetchData(route.params.card.id)}
                 contentContainerStyle={{ padding: 16 }}
             />
         </ScreenWrapper>
     )
-}
+})
