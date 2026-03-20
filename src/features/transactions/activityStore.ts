@@ -7,6 +7,7 @@ export class ActivityStore {
     search = ''
     transactions: Transaction[] = []
     totalCount = 0
+    hasLoaded = false
     isLoading = false
     isFetching = false
 
@@ -28,7 +29,7 @@ export class ActivityStore {
 
     async fetchTransactions() {
         this.isFetching = true
-        if (this.transactions.length === 0) this.isLoading = true
+        if (!this.hasLoaded) this.isLoading = true
 
         try {
             const params = this.search.trim()
@@ -39,6 +40,7 @@ export class ActivityStore {
             runInAction(() => {
                 this.transactions = response.data
                 this.totalCount = response.meta?.totalCount ?? response.data.length
+                this.hasLoaded = true
                 this.isLoading = false
                 this.isFetching = false
             })
@@ -48,5 +50,14 @@ export class ActivityStore {
                 this.isFetching = false
             })
         }
+    }
+
+    reset() {
+        this.search = ''
+        this.transactions = []
+        this.totalCount = 0
+        this.hasLoaded = false
+        this.isLoading = false
+        this.isFetching = false
     }
 }

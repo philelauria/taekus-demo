@@ -94,7 +94,7 @@ export const CardDetailScreen: React.FC = observer(() => {
                         <Text variant="bodySmall" className="text-text-secondary">
                             Card Number
                         </Text>
-                        <Text variant="titleMedium" className="mt-1">
+                        <Text variant="titleMedium" className="text-text-primary mt-1">
                             {revealedNumber}
                         </Text>
                         <View className="flex-row mt-3 gap-6">

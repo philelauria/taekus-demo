@@ -76,6 +76,10 @@ export class AuthStore {
             this.isAuthenticated = false
             this.error = null
         })
+
+        if (typeof this.rootStore.reset === 'function') {
+            this.rootStore.reset()
+        }
     }
 
     clearError() {

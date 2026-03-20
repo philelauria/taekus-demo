@@ -9,70 +9,74 @@ const mockUser = {
 
 const createStore = () => {
     const rootStore = new RootStore()
-    return rootStore.authStore
+    return { authStore: rootStore.authStore, rootStore }
 }
 
 describe('AuthStore', () => {
     it('should initialize with default state', () => {
-        const store = createStore()
-        expect(store.user).toBeNull()
-        expect(store.isAuthenticated).toBe(false)
-        expect(store.isLoading).toBe(false)
-        expect(store.isRestoringSession).toBe(true)
-        expect(store.error).toBeNull()
+        const { authStore } = createStore()
+        expect(authStore.user).toBeNull()
+        expect(authStore.isAuthenticated).toBe(false)
+        expect(authStore.isLoading).toBe(false)
+        expect(authStore.isRestoringSession).toBe(true)
+        expect(authStore.error).toBeNull()
     })
 
     it('should clear error', () => {
-        const store = createStore()
-        store.error = 'Login failed'
-        store.clearError()
-        expect(store.error).toBeNull()
+        const { authStore } = createStore()
+        authStore.error = 'Login failed'
+        authStore.clearError()
+        expect(authStore.error).toBeNull()
     })
 })
 
 describe('AuthStore.login', () => {
     it('should set loading on login start', () => {
-        const store = createStore()
-        store.login({ email: 'test@test.com', password: 'meh' })
-        expect(store.isLoading).toBe(true)
-        expect(store.error).toBeNull()
+        const { authStore } = createStore()
+        authStore.login({ email: 'test@test.com', password: 'meh' })
+        expect(authStore.isLoading).toBe(true)
+        expect(authStore.error).toBeNull()
     })
 
     it('should set user and authenticated on success', async () => {
-        const store = createStore()
-        await store.login({ email: 'demo@taekus.com', password: 'demo' })
-        expect(store.isLoading).toBe(false)
-        expect(store.isAuthenticated).toBe(true)
-        expect(store.user).toEqual(mockUser)
+        const { authStore } = createStore()
+        await authStore.login({ email: 'demo@taekus.com', password: 'demo' })
+        expect(authStore.isLoading).toBe(false)
+        expect(authStore.isAuthenticated).toBe(true)
+        expect(authStore.user).toEqual(mockUser)
     })
 
     it('should set error on failure', async () => {
-        const store = createStore()
-        await store.login({ email: 'wrong@test.com', password: 'wrong' })
-        expect(store.isLoading).toBe(false)
-        expect(store.error).toBeTruthy()
+        const { authStore } = createStore()
+        await authStore.login({ email: 'wrong@test.com', password: 'wrong' })
+        expect(authStore.isLoading).toBe(false)
+        expect(authStore.error).toBeTruthy()
     })
 })
 
 describe('AuthStore.restoreSession', () => {
     it('should not authenticate when no token', async () => {
-        const store = createStore()
-        await store.restoreSession()
-        expect(store.isRestoringSession).toBe(false)
-        expect(store.isAuthenticated).toBe(false)
-        expect(store.user).toBeNull()
+        const { authStore } = createStore()
+        await authStore.restoreSession()
+        expect(authStore.isRestoringSession).toBe(false)
+        expect(authStore.isAuthenticated).toBe(false)
+        expect(authStore.user).toBeNull()
     })
 })
 
 describe('AuthStore.logout', () => {
-    it('should clear auth state', async () => {
-        const store = createStore()
-        await store.login({ email: 'demo@taekus.com', password: 'demo' })
-        expect(store.isAuthenticated).toBe(true)
+    it('should clear auth state and trigger global data reset', async () => {
+        const { authStore, rootStore } = createStore()
+        const resetSpy = jest.spyOn(rootStore, 'reset')
 
-        await store.logout()
-        expect(store.isAuthenticated).toBe(false)
-        expect(store.user).toBeNull()
-        expect(store.error).toBeNull()
+        await authStore.login({ email: 'demo@taekus.com', password: 'demo' })
+        expect(authStore.isAuthenticated).toBe(true)
+
+        await authStore.logout()
+        expect(authStore.isAuthenticated).toBe(false)
+        expect(authStore.user).toBeNull()
+        expect(authStore.error).toBeNull()
+
+        expect(resetSpy).toHaveBeenCalledTimes(1)
     })
 })

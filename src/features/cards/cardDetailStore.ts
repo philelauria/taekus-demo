@@ -4,8 +4,10 @@ import { mockApi } from '~/shared/services/mockApi'
 import type { RootStore } from '~/stores/RootStore'
 
 export class CardDetailStore {
+    activeCardId: string | null = null
     card: Card | null = null
     transactions: Transaction[] = []
+    hasLoaded = false
     isLoading = false
     isFetching = false
     isToggling = false
@@ -23,7 +25,16 @@ export class CardDetailStore {
 
     async fetchData(cardId: string) {
         this.isFetching = true
-        if (!this.card) this.isLoading = true
+
+        // cache invalidation in case user sets a card detail to card A, then goes back and swtiches to card B
+        if (this.activeCardId !== cardId) {
+            this.card = null
+            this.transactions = []
+            this.hasLoaded = false
+            this.activeCardId = cardId
+        }
+
+        if (!this.hasLoaded) this.isLoading = true
 
         try {
             const [cardsResponse, transactionsResponse] = await Promise.all([
@@ -34,6 +45,7 @@ export class CardDetailStore {
             runInAction(() => {
                 this.card = cardsResponse.data.find((c) => c.id === cardId) ?? null
                 this.transactions = transactionsResponse.data
+                this.hasLoaded = true
                 this.isLoading = false
                 this.isFetching = false
             })
@@ -74,5 +86,14 @@ export class CardDetailStore {
                 this.isToggling = false
             })
         }
+    }
+
+    reset() {
+        this.card = null
+        this.transactions = []
+        this.hasLoaded = false
+        this.isLoading = false
+        this.isFetching = false
+        this.isToggling = false
     }
 }

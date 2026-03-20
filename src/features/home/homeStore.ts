@@ -6,6 +6,7 @@ import type { RootStore } from '~/stores/RootStore'
 export class HomeStore {
     cards: Card[] = []
     rewards: RewardsBalance | null = null
+    hasLoaded = false
     isLoading = false
     isFetching = false
     error: string | null = null
@@ -31,7 +32,7 @@ export class HomeStore {
 
     async fetchData() {
         this.isFetching = true
-        if (this.cards.length === 0) this.isLoading = true
+        if (!this.hasLoaded) this.isLoading = true
         this.error = null
 
         try {
@@ -43,6 +44,7 @@ export class HomeStore {
             runInAction(() => {
                 this.cards = cardsResponse.data
                 this.rewards = rewardsResponse.data
+                this.hasLoaded = true
                 this.isLoading = false
                 this.isFetching = false
             })
@@ -53,5 +55,14 @@ export class HomeStore {
                 this.isFetching = false
             })
         }
+    }
+
+    reset() {
+        this.cards = []
+        this.rewards = null
+        this.hasLoaded = false
+        this.isLoading = false
+        this.isFetching = false
+        this.error = null
     }
 }
